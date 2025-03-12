@@ -7,6 +7,7 @@ class ExceptionTest {
 
     @Test
     void exceptionTest() {
-        Assertions.assertThrows(CustomException.class, OtherClass::exceptionThrower);
+        Exception exception = Assertions.assertThrows(CustomException.class, OtherClass::exceptionThrower, "Incorrect exception");
+        Assertions.assertEquals("Custom exception generated!", exception.getMessage(), "Incorrect exception message");
     }
 }
