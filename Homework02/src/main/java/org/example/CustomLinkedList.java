@@ -1,6 +1,6 @@
 package org.example;
 
-public class CustomLinkedList<E> {
+public class CustomLinkedList<E extends Comparable<E>> {
 
     private static class Node<E> {
         E item;
@@ -171,5 +171,41 @@ public class CustomLinkedList<E> {
             succNode.prev = newNode;
         }
         size++;
+    }
+
+    public void quicksort() {
+        if (first == null || last == null) {
+            return;
+        }
+        quicksort(first, last);
+    }
+
+    private void quicksort(Node<E> low, Node<E> high) {
+        if (low != null && high != null && low != high && low.prev != high) {
+            Node<E> pivot = partition(low, high);
+            quicksort(low, pivot.prev);
+            quicksort(pivot.next, high);
+        }
+    }
+
+    private Node<E> partition(Node<E> low, Node<E> high) {
+        E pivot = high.item;
+        Node<E> i = low.prev;
+
+        for (Node<E> j = low; j != high; j = j.next) {
+            if (j.item.compareTo(pivot) <= 0) {
+                i = (i == null) ? low : i.next;
+                swap(i, j);
+            }
+        }
+        i = (i == null) ? low : i.next;
+        swap(i, high);
+        return i;
+    }
+
+    private void swap(Node<E> a, Node<E> b) {
+        E temp = a.item;
+        a.item = b.item;
+        b.item = temp;
     }
 }
