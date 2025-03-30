@@ -1,8 +1,6 @@
 package org.example;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class CustomArrayList<E extends Comparable<E>> {
 
@@ -89,7 +87,7 @@ public class CustomArrayList<E extends Comparable<E>> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " Size: " + size);
         }
     }
