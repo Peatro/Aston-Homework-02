@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.NoSuchElementException;
+
 public class CustomLinkedList<E extends Comparable<E>> {
 
     private static class Node<E> {
@@ -44,12 +46,12 @@ public class CustomLinkedList<E extends Comparable<E>> {
         size++;
     }
 
-    public void add(int index, E element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    public void addByIndex(int index, E element) {
+        if(index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index value!");
         }
 
-        if (index == this.size) {
+        if (index == size) {
             addLast(element);
         } else {
             linkBefore(element, getNode(index));
@@ -58,9 +60,7 @@ public class CustomLinkedList<E extends Comparable<E>> {
 
     public E remove(int index) {
 
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
 
         Node<E> toRemove = getNode(index);
         E removedData = toRemove.item;
@@ -86,8 +86,7 @@ public class CustomLinkedList<E extends Comparable<E>> {
     public E removeFirst() {
 
         if (first == null) {
-            System.out.println("List is empty");
-            return null;
+            throw new NoSuchElementException("List is empty!");
         }
 
         E removedItem = first.item;
@@ -107,8 +106,7 @@ public class CustomLinkedList<E extends Comparable<E>> {
     public E removeLast() {
 
         if (last == null) {
-            System.out.println("List is empty");
-            return null;
+            throw new NoSuchElementException("List is Empty!");
         }
 
         E removedItem = last.item;
@@ -133,15 +131,19 @@ public class CustomLinkedList<E extends Comparable<E>> {
         return size == 0;
     }
 
-    public int getSize() {
+    public int size() {
         return this.size;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + " Size: " + size);
+        }
     }
 
     private Node<E> getNode(int index) {
 
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
 
         Node<E> current;
 
@@ -159,16 +161,23 @@ public class CustomLinkedList<E extends Comparable<E>> {
         return current;
     }
 
-    private void linkBefore(E element, Node<E> succNode) {
-        Node<E> prev = succNode.prev;
+    private void linkBefore(E element, Node<E> replacedNode) {
+        Node<E> prevNode = replacedNode.prev;
         Node<E> newNode = new Node<>(element);
+        Node<E> nextNode = replacedNode.next;
 
-        if (prev == null) {
-            first = prev;
+        if (prevNode == null) {
+            first = newNode;
+            newNode.next = replacedNode;
+            replacedNode.prev = newNode;;
         } else {
-            prev.next = newNode;
-            newNode.next = succNode;
-            succNode.prev = newNode;
+            if (nextNode == null) {
+                last = replacedNode;
+            }
+            prevNode.next = newNode;
+            replacedNode.prev = newNode;
+            newNode.prev = prevNode;
+            newNode.next = replacedNode;
         }
         size++;
     }
