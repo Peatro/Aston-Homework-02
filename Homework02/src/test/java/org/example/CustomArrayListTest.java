@@ -311,6 +311,7 @@ public class CustomArrayListTest {
         if (array.length != list.size()) {
             throw new IllegalStateException("Length should be EQUALS! - Array size: " + array.length + " List size: " + list.size());
         }
+
         for (int i = 0; i < array.length; i++) {
             T arrayVal = array[i];
             T listVal = list.get(i);
